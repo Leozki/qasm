@@ -167,3 +167,30 @@ int IsStringFloat(char *pstrString) {
     else
         return FALSE;
 }
+
+
+void StripComments ( char * pstrSourceLine )
+{
+    unsigned int iCurrCharIndex;
+    int iInString;
+
+    iInString = 0;
+    for ( iCurrCharIndex = 0; iCurrCharIndex < strlen ( pstrSourceLine ) - 1; ++ iCurrCharIndex )
+    {
+        if ( pstrSourceLine [ iCurrCharIndex ] == '"' )
+            if ( iInString )
+                iInString = 0;
+            else
+                iInString = 1;
+
+        if ( pstrSourceLine [ iCurrCharIndex ] == ';' )
+        {
+            if ( ! iInString )
+            {
+                pstrSourceLine [ iCurrCharIndex ] = '\n';
+                pstrSourceLine [ iCurrCharIndex + 1 ] = '\0';
+                break;
+            }
+        }
+    }
+}

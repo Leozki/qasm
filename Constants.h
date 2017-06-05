@@ -19,4 +19,19 @@
 
 #define MAX_IDENT_SIZE 256
 
+
+// 文件
+#define MAX_FILENAME_SIZE           2048
+#define SOURCE_FILE_EXT             ".ASM"
+#define EXEC_FILE_EXT               ".SE"
+
+
+// 源码
+#define MAX_SOURCE_CODE_SIZE        65536
+#define MAX_SOURCE_LINE_SIZE        4096
+
+
+void ExitOnError(char *pstrErrorMssg);
+void Exit();
+
 #endif //QASM_CONSTANTS_H

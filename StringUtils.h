@@ -23,4 +23,5 @@ int IsStringInteger(char *pstrString);
 
 int IsStringFloat(char *pstrString);
 
+void StripComments ( char * pstrSourceLine );
 #endif //QASM_STRINGUTILS_H
