@@ -17,13 +17,14 @@
 #define FALSE 0
 #endif
 
+// 标识符最大长度
 #define MAX_IDENT_SIZE 256
 
 
 // 文件
 #define MAX_FILENAME_SIZE           2048
-#define SOURCE_FILE_EXT             ".ASM"
-#define EXEC_FILE_EXT               ".SE"
+#define SOURCE_FILE_EXT             ".XASM"
+#define EXEC_FILE_EXT               ".XSE"
 
 
 // 源码

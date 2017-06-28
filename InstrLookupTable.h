@@ -6,3 +6,5 @@
 #define QASM_INSTRLOOKUPTABLE_H
 
 #endif //QASM_INSTRLOOKUPTABLE_H
+
+void InitInstrTable();
