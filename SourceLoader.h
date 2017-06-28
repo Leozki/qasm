@@ -5,6 +5,7 @@
 #ifndef QASM_SOURCELOADER_H
 #define QASM_SOURCELOADER_H
 #include "Constants.h"
+
 char ** g_ppstrSourceCode = NULL;
 int g_iSourceCodeSize;
 

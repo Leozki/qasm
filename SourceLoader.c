@@ -3,69 +3,53 @@
 //
 
 #include "SourceLoader.h"
-#include "Constants.h"
 #include "StringUtils.h"
 
-void LoadSourceFile ()
-{
 
-    if ( ! ( g_pSourceFile = fopen ( g_pstrSourceFilename, "rb" ) ) )
-        ExitOnError ( "Could not open source file" );
+// 加载源文件
+void LoadSourceFile() {
 
-    // Count the number of source lines
+    if (!(g_pSourceFile = fopen(g_pstrSourceFilename, "rb")))
+        ExitOnError("无法打开源文件");
 
-    while ( ! feof ( g_pSourceFile ) )
-        if ( fgetc ( g_pSourceFile ) == '\n' )
-            ++ g_iSourceCodeSize;
-    ++ g_iSourceCodeSize;
+    // 计算源文件有多少行
+    while (!feof(g_pSourceFile)) {
+        if (fgetc(g_pSourceFile) == '\n') {
+            g_iSourceCodeSize++;
+        }
+    }
+    g_iSourceCodeSize++;
 
-    // Close the file
+    fclose(g_pSourceFile);
 
-    fclose ( g_pSourceFile );
+    // 再以 ASCII 模式遍历一遍
+    if (!(g_pSourceFile = fopen(g_pstrSourceFilename, "r")))
+        ExitOnError("无法打开源文件");
 
-    // Reopen the source file in ASCII mode
+    if (!(g_ppstrSourceCode = (char **) malloc(g_iSourceCodeSize * sizeof(char *))))
+        ExitOnError("申请源文件大小内存空间失败");
 
-    if ( ! ( g_pSourceFile = fopen ( g_pstrSourceFilename, "r" ) ) )
-        ExitOnError ( "Could not open source file" );
+    // 开始读取源码
 
-    // Allocate an array of strings to hold each source line
+    for (int iCurrLineIndex = 0; iCurrLineIndex < g_iSourceCodeSize; ++iCurrLineIndex) {
+        if (!(g_ppstrSourceCode[iCurrLineIndex] = (char *) malloc(MAX_SOURCE_LINE_SIZE + 1)))
+            ExitOnError("无法申请一行源代码的空间");
 
-    if ( ! ( g_ppstrSourceCode = ( char ** ) malloc ( g_iSourceCodeSize * sizeof ( char * ) ) ) )
-        ExitOnError ( "Could not allocate space for source code" );
+        // 读取当前行
+        fgets(g_ppstrSourceCode[iCurrLineIndex], MAX_SOURCE_LINE_SIZE, g_pSourceFile);
 
-    // Read the source code in from the file
+        // 清除注释
+        StripComments(g_ppstrSourceCode[iCurrLineIndex]);
+        // 清除空白符号
+        TrimWhitespace(g_ppstrSourceCode[iCurrLineIndex]);
 
-    for ( int iCurrLineIndex = 0; iCurrLineIndex < g_iSourceCodeSize; ++ iCurrLineIndex )
-    {
-        // Allocate space for the line
-
-        if ( ! ( g_ppstrSourceCode [ iCurrLineIndex ] = ( char * ) malloc ( MAX_SOURCE_LINE_SIZE + 1 ) ) )
-            ExitOnError ( "Could not allocate space for source line" );
-
-        // Read in the current line
-
-        fgets ( g_ppstrSourceCode [ iCurrLineIndex ], MAX_SOURCE_LINE_SIZE, g_pSourceFile );
-
-        // Strip comments and trim whitespace
-
-        StripComments ( g_ppstrSourceCode [ iCurrLineIndex ] );
-        TrimWhitespace ( g_ppstrSourceCode [ iCurrLineIndex ] );
-
-        // Make sure to add a new newline if it was removed by the stripping of the
-        // comments and whitespace. We do this by checking the character right before
-        // the null terminator to see if it's \n. If not, we move the terminator over
-        // by one and add it. We use strlen () to find the position of the newline
-        // easily.
-
-        int iNewLineIndex = strlen ( g_ppstrSourceCode [ iCurrLineIndex ] ) - 1;
-        if ( g_ppstrSourceCode [ iCurrLineIndex ] [ iNewLineIndex ] != '\n' )
-        {
-            g_ppstrSourceCode [ iCurrLineIndex ] [ iNewLineIndex + 1 ] = '\n';
-            g_ppstrSourceCode [ iCurrLineIndex ] [ iNewLineIndex + 2 ] = '\0';
+        // 强制在每一行结尾加入换行符, 以便解析出一个换行TOKEN
+        int iNewLineIndex = strlen(g_ppstrSourceCode[iCurrLineIndex]) - 1;
+        if (g_ppstrSourceCode[iCurrLineIndex][iNewLineIndex] != '\n') {
+            g_ppstrSourceCode[iCurrLineIndex][iNewLineIndex + 1] = '\n';
+            g_ppstrSourceCode[iCurrLineIndex][iNewLineIndex + 2] = '\0';
         }
     }
 
-    // Close the source file
-
-    fclose ( g_pSourceFile );
+    fclose(g_pSourceFile);
 }
