@@ -17,7 +17,11 @@ typedef struct _InstrLookup
     OpTypes * OpList;
 } InstrLookup;
 
+void SetOpType ( int iInstrIndex, int iOpIndex, OpTypes iOpType );
+
 void InitInstrTable();
+
+int GetInstrByMnemonic(char *pstrMnemonic, InstrLookup *pInstr);
 
 InstrLookup g_InstrTable [ MAX_INSTR_LOOKUP_COUNT ];
 
