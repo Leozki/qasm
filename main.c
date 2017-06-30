@@ -9,31 +9,22 @@
 #include "SourceLoader.h"
 #include "Assembler.h"
 
-
-char g_pstrSourceFilename[MAX_FILENAME_SIZE];
-char g_pstrExecFilename[MAX_FILENAME_SIZE];
-
-
 void Init() {
     // 初始化指令表
     InitInstrTable();
-
     // 初始化其他表
     InitLinkedList(&g_symbolTable);
     InitLinkedList(&g_LabelTable);
     InitLinkedList(&g_funcTable);
     InitLinkedList(&g_stringTable);
-
 }
-
-
 
 
 int main(int argc, char *argv[]) {
     if (argc < 2) return 0;
 
     // 全局保存源文件的文件名,并转换为大写
-    strcmp(g_pstrSourceFilename, argv[1]);
+    strcpy(g_pstrSourceFilename, argv[1]);
     strupr(g_pstrSourceFilename);
 
     // 检查后缀名是否是xvm
@@ -65,10 +56,10 @@ int main(int argc, char *argv[]) {
     // 加载源文件
     LoadSourceFile();
 
-    printf("正在处理中:%s...\n\n", g_pstrSourceFilename);
+    printf("Begin process:%s...\n\n", g_pstrSourceFilename);
 
     // 编译处理源文件
-
+    AssmblSourceFile();
 
     return 0;
 }

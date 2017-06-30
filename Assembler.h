@@ -6,6 +6,7 @@
 #define XASM_ASSEMBLER_H
 
 #include "Constants.h"
+
 typedef struct _ScriptHeader {
     int iStackSize;
     int iGlobalDataSize;
@@ -41,13 +42,11 @@ typedef struct _Instr {
 // 编译文件
 void AssmblSourceFile();
 
-ScriptHeader g_ScriptHeader;
-int g_iIsSetStackSizeFound;
-int g_iIsSetPriorityFound;
-
-Instr *g_pInstrStream = NULL;
-int g_iInstrStreamSize; // 指令流的大小
-
-int g_iCurrInstrIndex; // 当前指令的索引
+extern ScriptHeader g_ScriptHeader;
+extern int g_iIsSetStackSizeFound;
+extern int g_iIsSetPriorityFound;
+extern Instr *g_pInstrStream;
+extern int g_iInstrStreamSize; // 指令流的大小
+extern int g_iCurrInstrIndex; // 当前指令的索引
 
 #endif //XASM_ASSEMBLER_H

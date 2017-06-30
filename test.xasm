@@ -1,0 +1,16 @@
+SetStackSize 512
+SetPriority Low
+
+Func Test
+{
+    Param a
+    Param b
+    Var c
+    Var d
+}
+
+Func _Main
+{
+    Var tmp
+    Var arr[100]
+}

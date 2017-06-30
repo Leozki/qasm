@@ -5,12 +5,19 @@
 #include "SourceLoader.h"
 #include "StringUtils.h"
 
+char g_pstrSourceFilename[MAX_FILENAME_SIZE];
+char g_pstrExecFilename[MAX_FILENAME_SIZE];
+
+char **g_ppstrSourceCode = NULL;
+int g_iSourceCodeSize;
+
+FILE *g_pSourceFile = NULL;
 
 // 加载源文件
 void LoadSourceFile() {
 
     if (!(g_pSourceFile = fopen(g_pstrSourceFilename, "rb")))
-        ExitOnError("无法打开源文件");
+        ExitOnError("Can't Open SourceFile");
 
     // 计算源文件有多少行
     while (!feof(g_pSourceFile)) {
@@ -24,16 +31,16 @@ void LoadSourceFile() {
 
     // 再以 ASCII 模式遍历一遍
     if (!(g_pSourceFile = fopen(g_pstrSourceFilename, "r")))
-        ExitOnError("无法打开源文件");
+        ExitOnError("Can't Open SourceFile");
 
     if (!(g_ppstrSourceCode = (char **) malloc(g_iSourceCodeSize * sizeof(char *))))
-        ExitOnError("申请源文件大小内存空间失败");
+        ExitOnError("Alloc Space Failed");
 
     // 开始读取源码
 
     for (int iCurrLineIndex = 0; iCurrLineIndex < g_iSourceCodeSize; ++iCurrLineIndex) {
         if (!(g_ppstrSourceCode[iCurrLineIndex] = (char *) malloc(MAX_SOURCE_LINE_SIZE + 1)))
-            ExitOnError("无法申请一行源代码的空间");
+            ExitOnError("Alloc Line Space Failed");
 
         // 读取当前行
         fgets(g_ppstrSourceCode[iCurrLineIndex], MAX_SOURCE_LINE_SIZE, g_pSourceFile);
@@ -51,5 +58,6 @@ void LoadSourceFile() {
         }
     }
 
+    printf("LoadSourceFile \"%s\" completed,total lines =  %d\n\n", g_pstrSourceFilename, g_iSourceCodeSize);
     fclose(g_pSourceFile);
 }

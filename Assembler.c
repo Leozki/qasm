@@ -10,6 +10,13 @@
 #include "SymbolTable.h"
 #include "LabelTable.h"
 
+ScriptHeader g_ScriptHeader;
+int g_iIsSetStackSizeFound;
+int g_iIsSetPriorityFound;
+Instr *g_pInstrStream = NULL;
+int g_iInstrStreamSize; // 指令流的大小
+int g_iCurrInstrIndex; // 当前指令的索引
+
 void AssmblSourceFile() {
     // 初始化
     g_ScriptHeader.iStackSize = 0;
@@ -38,6 +45,7 @@ void AssmblSourceFile() {
         // 没有 token 可以分析了就跳出
         if (END_OF_TOKEN_STREAM == GetNextToken())
             break;
+        // printf("CurrToken = %d \n", g_Lexer.CurrToken);
 
         // 根据不同类型的 token 做出选择
         switch (g_Lexer.CurrToken) {
@@ -77,17 +85,19 @@ void AssmblSourceFile() {
                         break;
                     }
                     case TOKEN_TYPE_IDENT: {
-                        if (0 == stricmp(g_Lexer.pstrCurrLexeme, PRIORITY_LOW_KEYWORD))
+                        if (stricmp(g_Lexer.pstrCurrLexeme, PRIORITY_LOW_KEYWORD) == 0)
                             g_ScriptHeader.iPriorityType = PRIORITY_LOW;
-                        else if (0 == stricmp(g_Lexer.pstrCurrLexeme, PRIORITY_MED_KEYWORD))
+                        else if (stricmp(g_Lexer.pstrCurrLexeme, PRIORITY_MED_KEYWORD) == 0)
                             g_ScriptHeader.iPriorityType = PRIORITY_MED;
-                        else if (0 == stricmp(g_Lexer.pstrCurrLexeme, PRIORITY_HIGH_KEYWORD))
+                        else if (stricmp(g_Lexer.pstrCurrLexeme, PRIORITY_HIGH_KEYWORD) == 0)
                             g_ScriptHeader.iPriorityType = PRIORITY_HIGH;
                         else
                             ExitOnCodeError(ERROR_MSSG_INVALID_PRIORITY);
+                        break;
                     }
                     default:
                         ExitOnCodeError(ERROR_MSSG_INVALID_PRIORITY);
+                        break;
                 }
                 g_iIsSetPriorityFound = TRUE;
                 break;
@@ -129,6 +139,12 @@ void AssmblSourceFile() {
 
                 if (-1 == AddSymbol(pstrIdent, iSize, iStackIndex, iCurrFuncIndex))
                     ExitOnError(ERROR_MSSG_IDENT_REDEFINITION);
+
+                if ( iIsFuncActive )
+                    iCurrFuncLocalDataSize += iSize;
+                else
+                    g_ScriptHeader.iGlobalDataSize += iSize;
+
                 break;
             }
             case TOKEN_TYPE_FUNC: {
@@ -159,7 +175,7 @@ void AssmblSourceFile() {
                 // 设置分析已经进入了函数的作用于
                 iIsFuncActive = TRUE;
                 // 记录当前分析的函数
-                strcmp(pstrCurrFuncName, pstrFuncName);
+                strcpy(pstrCurrFuncName, pstrFuncName);
                 iCurrFuncIndex = iFuncIndex;
                 iCurrFuncParamCount = 0;
                 iCurrFuncLocalDataSize = 0;
@@ -167,7 +183,7 @@ void AssmblSourceFile() {
                 // 忽略直到下一个 { 之前的空行
                 while (TOKEN_TYPE_NEWLINE == GetNextToken());
                 // 没有空行了,下一个 token 必须为 {
-                if (TOKEN_TYPE_OPEN_BRACE != GetNextToken())
+                if (TOKEN_TYPE_OPEN_BRACE != g_Lexer.CurrToken)
                     ExitOnCharExpectedError('{');
                 g_iInstrStreamSize++;
                 break;
@@ -181,6 +197,9 @@ void AssmblSourceFile() {
 
                 // 离开函数作用域
                 iIsFuncActive = FALSE;
+
+                printf("Find Func = %s ,ParamCount =%d, LocalDataSize = %d \n",
+                       pstrCurrFuncName, iCurrFuncParamCount, iCurrFuncLocalDataSize);
                 break;
             }
             case TOKEN_TYPE_PARAM: {
@@ -198,41 +217,33 @@ void AssmblSourceFile() {
                 iCurrFuncParamCount++;
                 break;
             }
-            case TOKEN_TYPE_INSTR:
-            {
-                // Make sure we aren't in the global scope, since instructions
-                // can only appear in functions
-
-                if ( ! iIsFuncActive )
-                    ExitOnCodeError ( ERROR_MSSG_GLOBAL_INSTR );
-
-                // Increment the instruction stream size
-
-                ++ g_iInstrStreamSize;
+            case TOKEN_TYPE_INSTR: {
+                if (!iIsFuncActive)
+                    ExitOnCodeError(ERROR_MSSG_GLOBAL_INSTR);
+                ++g_iInstrStreamSize;
 
                 break;
             }
-            case TOKEN_TYPE_IDENT:
-            {
-                if ( GetLookAheadChar () != ':' )
-                    ExitOnCodeError ( ERROR_MSSG_INVALID_INSTR );
-                if ( ! iIsFuncActive )
-                    ExitOnCodeError ( ERROR_MSSG_GLOBAL_LINE_LABEL );
-                char * pstrIdent = GetCurrLexeme ();
+            case TOKEN_TYPE_IDENT: {
+                if (GetLookAheadChar() != ':')
+                    ExitOnCodeError(ERROR_MSSG_INVALID_INSTR);
+                if (!iIsFuncActive)
+                    ExitOnCodeError(ERROR_MSSG_GLOBAL_LINE_LABEL);
+                char *pstrIdent = GetCurrLexeme();
 
                 int iTargetIndex = g_iInstrStreamSize - 1;
 
                 int iFuncIndex = iCurrFuncIndex;
 
 
-                if ( AddLabel ( pstrIdent, iTargetIndex, iFuncIndex ) == -1 )
-                    ExitOnCodeError ( ERROR_MSSG_LINE_LABEL_REDEFINITION );
+                if (AddLabel(pstrIdent, iTargetIndex, iFuncIndex) == -1)
+                    ExitOnCodeError(ERROR_MSSG_LINE_LABEL_REDEFINITION);
 
                 break;
             }
             default:
-                if ( g_Lexer.CurrToken != TOKEN_TYPE_NEWLINE )
-                    ExitOnCodeError ( ERROR_MSSG_INVALID_INPUT );
+                if (g_Lexer.CurrToken != TOKEN_TYPE_NEWLINE)
+                    ExitOnCodeError(ERROR_MSSG_INVALID_INPUT);
                 break;
         }
     }

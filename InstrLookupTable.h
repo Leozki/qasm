@@ -28,7 +28,7 @@ void InitInstrTable();
 // 根据助记符查找指令
 int GetInstrByMnemonic(char *pstrMnemonic, InstrLookup *pInstr);
 
-InstrLookup g_InstrTable[MAX_INSTR_LOOKUP_COUNT];
+extern  InstrLookup g_InstrTable[MAX_INSTR_LOOKUP_COUNT];
 
 
 #endif //QASM_INSTRLOOKUPTABLE_H

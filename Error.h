@@ -6,67 +6,82 @@
 #define XASM_ERROR_H
 
 #define ERROR_MSSG_INVALID_INPUT	\
-			"无效的输入字符"
+			"Invalid input"
 
-#define ERROR_MSSG_LOCAL_SETSTACKSIZE    \
-            "SetStackSize 只能在全局作用域出现"
+#define ERROR_MSSG_LOCAL_SETSTACKSIZE	\
+			"SetStackSize can only appear in the global scope"
 
-#define ERROR_MSSG_INVALID_STACK_SIZE    \
-            "无效的 stack 大小"
+#define ERROR_MSSG_INVALID_STACK_SIZE	\
+			"Invalid stack size"
 
-#define ERROR_MSSG_MULTIPLE_SETSTACKSIZES    \
-            "SetStackSize 只能执行一次"
+#define ERROR_MSSG_MULTIPLE_SETSTACKSIZES	\
+			"Multiple instances of SetStackSize illegal"
 
 #define ERROR_MSSG_LOCAL_SETPRIORITY   \
-            "SetPriority 只能在全局作用域出现"
+			"SetPriority can only appear in the global scope"
 
-#define ERROR_MSSG_INVALID_PRIORITY    \
-            "无效的 priority"
+#define ERROR_MSSG_INVALID_PRIORITY	\
+			"Invalid priority"
 
 #define ERROR_MSSG_MULTIPLE_SETPRIORITIES   \
-            "SetPriority 只能执行一次"
+			"Multiple instances of SetPriority illegal"
 
-#define ERROR_MSSG_IDENT_EXPECTED    \
-            "Identifier expected"
+#define ERROR_MSSG_IDENT_EXPECTED	\
+			"Identifier expected"
 
-#define ERROR_MSSG_INVALID_ARRAY_SIZE    \
-            "无效的数组大小"
+#define ERROR_MSSG_INVALID_ARRAY_SIZE	\
+			"Invalid array size"
 
-#define ERROR_MSSG_IDENT_REDEFINITION    \
-            "Identifier 重定义"
+#define ERROR_MSSG_IDENT_REDEFINITION	\
+			"Identifier redefinition"
 
-#define ERROR_MSSG_UNDEFINED_IDENT    \
-            "未定义的 identifier"
+#define ERROR_MSSG_UNDEFINED_IDENT	\
+			"Undefined identifier"
 
-#define ERROR_MSSG_NESTED_FUNC    \
-            "嵌套的函数 "
+#define ERROR_MSSG_NESTED_FUNC	\
+			"Nested functions illegal"
 
-#define ERROR_MSSG_FUNC_REDEFINITION    \
-            "函数重定义"
+#define ERROR_MSSG_FUNC_REDEFINITION	\
+			"Function redefinition"
 
-#define ERROR_MSSG_UNDEFINED_FUNC    \
-            "未定义的函数"
+#define ERROR_MSSG_UNDEFINED_FUNC	\
+			"Undefined function"
 
-#define ERROR_MSSG_GLOBAL_PARAM    \
-            "参数只能出现在函数旁边"
+#define ERROR_MSSG_GLOBAL_PARAM	\
+			"Parameters can only appear inside functions"
 
-#define ERROR_MSSG_MAIN_PARAM    \
-            "_Main () 函数不能接收参数"
-
-#define ERROR_MSSG_GLOBAL_INSTR	\
-			"Instructions 只能出现在函数旁边"
+#define ERROR_MSSG_MAIN_PARAM	\
+			"_Main () function cannot accept parameters"
 
 #define ERROR_MSSG_GLOBAL_LINE_LABEL	\
-			"行标签 functions"
+			"Line labels can only appear inside functions"
 
 #define ERROR_MSSG_LINE_LABEL_REDEFINITION	\
-			"行标签 重定义"
+			"Line label redefinition"
 
 #define ERROR_MSSG_UNDEFINED_LINE_LABEL	\
-			"未定义的行标签"
+			"Undefined line label"
+
+#define ERROR_MSSG_GLOBAL_INSTR	\
+			"Instructions can only appear inside functions"
 
 #define ERROR_MSSG_INVALID_INSTR	\
-			"无效的 instruction"
+			"Invalid instruction"
+
+#define ERROR_MSSG_INVALID_OP	\
+			"Invalid operand"
+
+#define ERROR_MSSG_INVALID_STRING	\
+			"Invalid string"
+
+#define ERROR_MSSG_INVALID_ARRAY_NOT_INDEXED	\
+			"Arrays must be indexed"
+
+#define ERROR_MSSG_INVALID_ARRAY	\
+			"Invalid array"
+
+#define ERROR_MSSG_INVALID_ARRAY_INDEX	\
+			"Invalid array index"
 
 void ExitOnCodeError(char *pstrErrorMssg);
 

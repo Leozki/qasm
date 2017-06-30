@@ -100,7 +100,7 @@ Token GetNextToken() {
                 iCurrSourceIndex++;
         }
         g_Lexer.pstrCurrLexeme[iCurrDestIndex] = g_ppstrSourceCode[g_Lexer.iCurrSourceLine][iCurrSourceIndex];
-        iCurrSourceIndex++;
+        iCurrDestIndex++;
     }
     g_Lexer.pstrCurrLexeme[iCurrDestIndex] = '\0';
 
@@ -188,6 +188,9 @@ Token GetNextToken() {
     // SetStackSize
     if (strcmp(g_Lexer.pstrCurrLexeme, "SETSTACKSIZE") == 0)
         g_Lexer.CurrToken = TOKEN_TYPE_SETSTACKSIZE;
+    // SetPriority
+    if (strcmp(g_Lexer.pstrCurrLexeme, "SETPRIORITY") == 0)
+        g_Lexer.CurrToken = TOKEN_TYPE_SETPRIORITY;
 
     // Var/Var[]
     if (strcmp(g_Lexer.pstrCurrLexeme, "VAR") == 0)
@@ -209,18 +212,44 @@ Token GetNextToken() {
     InstrLookup instr;
     if (GetInstrByMnemonic(g_Lexer.pstrCurrLexeme, &instr))
         g_Lexer.CurrToken = TOKEN_TYPE_INSTR;
+
+    // printf("GetNextToken = %s\n", g_Lexer.pstrCurrLexeme);
     return g_Lexer.CurrToken;
 }
 
 char *GetCurrLexeme() {
-
-    return NULL;
+    return g_Lexer.pstrCurrLexeme;
 }
 
 char GetLookAheadChar() {
-    return 0;
+    int iCurrSourceLine = g_Lexer.iCurrSourceLine;
+    unsigned int iIndex = g_Lexer.iIndex1;
+    if (g_Lexer.iCurrLexState != LEX_STATE_IN_STRING) {
+        while (TRUE) {
+            if (iIndex >= strlen(g_ppstrSourceCode[iCurrSourceLine])) {
+                iCurrSourceLine += 1;
+                if (iCurrSourceLine >= g_iSourceCodeSize)
+                    return 0;
+                iIndex = 0;
+            }
+
+            if (!IsCharWhitespace(g_ppstrSourceCode[iCurrSourceLine][iIndex]))
+                break;
+            ++iIndex;
+        }
+    }
+    return g_ppstrSourceCode[iCurrSourceLine][iIndex];
 }
 
 int SkipToNextLine() {
-    return 0;
+    g_Lexer.iCurrSourceLine++;
+    if (g_Lexer.iCurrSourceLine >= g_iSourceCodeSize)
+        return FALSE;
+
+    // 重置查找 token 头尾的索引
+    g_Lexer.iIndex0 = 0;
+    g_Lexer.iIndex1 = 0;
+
+    g_Lexer.iCurrLexState = LEX_STATE_NO_STRING;
+    return TRUE;
 }

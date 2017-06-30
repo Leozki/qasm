@@ -61,6 +61,9 @@
 #define OP_FLAG_TYPE_REG        128
 
 //-------------------------------------------
+
+InstrLookup g_InstrTable[MAX_INSTR_LOOKUP_COUNT];
+
 void SetOpType(int iInstrIndex, int iOpIndex, OpTypes iOpType) {
     g_InstrTable[iInstrIndex].OpList[iOpIndex] = iOpType;
 }

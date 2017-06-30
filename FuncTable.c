@@ -14,7 +14,7 @@ FuncNode *GetFuncByName(char *strName) {
     for (int iCurNode = 0; iCurNode < g_funcTable.iNodeCount; ++iCurNode) {
         FuncNode *pCurrFunc = (FuncNode *) pCurNode->pData;
 
-        if (strcmp(pCurrFunc->pstrName, strName)) {
+        if (strcmp((const char *) pCurrFunc->pstrName, strName) == 0) {
             return pCurrFunc;
         } else {
             pCurNode = pCurNode->pNext;
@@ -27,6 +27,7 @@ int AddFunc(char *strName, int iEntryPoint) {
     if (GetFuncByName(strName))
         return -1;
 
+    printf("AddFunc FuncName=%s,EntryPoint=%d\n", strName, iEntryPoint);
     // 创建一个新的函数节点
     FuncNode *pNewFuncNode = (FuncNode *) malloc(sizeof(FuncNode));
 
