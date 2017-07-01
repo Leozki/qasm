@@ -7,6 +7,6 @@
 
 #include "LinkedList.h"
 
-extern LinkedList *g_HostAPICallTable;
+extern LinkedList g_HostAPICallTable;
 
 #endif //XASM_HOSTAPICALLTABLE_H

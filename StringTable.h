@@ -12,7 +12,7 @@
 int AddString(LinkedList *pList, char *pstrString);
 
 // 字符串表
-LinkedList g_stringTable;
+LinkedList g_StringTable;
 
 
 #endif //QASM_STRING_TABLE_H

@@ -7,11 +7,11 @@
 
 
 FuncNode *GetFuncByName(char *strName) {
-    if (!g_funcTable.iNodeCount) return NULL;
+    if (!g_FuncTable.iNodeCount) return NULL;
 
-    LinkedListNode *pCurNode = g_funcTable.pHead;
+    LinkedListNode *pCurNode = g_FuncTable.pHead;
 
-    for (int iCurNode = 0; iCurNode < g_funcTable.iNodeCount; ++iCurNode) {
+    for (int iCurNode = 0; iCurNode < g_FuncTable.iNodeCount; ++iCurNode) {
         FuncNode *pCurrFunc = (FuncNode *) pCurNode->pData;
 
         if (strcmp((const char *) pCurrFunc->pstrName, strName) == 0) {
@@ -36,7 +36,7 @@ int AddFunc(char *strName, int iEntryPoint) {
     pNewFuncNode->iEntryPoint = iEntryPoint;
 
     // 添加到函数表并取出索引
-    int iIndex = AddNode(&g_funcTable, pNewFuncNode);
+    int iIndex = AddNode(&g_FuncTable, pNewFuncNode);
     pNewFuncNode->iIndex = iIndex;
 
     // 以后会填充

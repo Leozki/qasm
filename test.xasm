@@ -1,16 +1,33 @@
 SetStackSize 512
 SetPriority Low
 
-Func Test
+; 这里是注释
+
+; 全局变量
+Var GlobalValue
+Var GlobalArray [256]
+
+; 函数
+Func TestAdd
 {
+    ; 参数
     Param a
     Param b
-    Var c
-    Var d
+    ; 局部变量
+    Var sum
+    Mov sum,a
+    Add sum,b
+    Mov _RetVal,sum
+    ; Ret指令会自动加在最后
 }
 
 Func _Main
 {
     Var tmp
     Var arr[100]
+    ; 传参并调用函数 TestAdd(1,2)
+    Push 2
+    Push 1
+    Call TestAdd
+    Mov GlobalValue,_RetVal
 }

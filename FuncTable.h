@@ -26,6 +26,6 @@ void SetFuncInfo(char *pstrName, int iParamCount, int iLocalDataSize);
 
 
 // 函数表
-LinkedList g_funcTable;
+LinkedList g_FuncTable;
 
 #endif //QASM_FUNCTABLE_H

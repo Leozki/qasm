@@ -28,6 +28,6 @@ int AddSymbol(char *pstrIdent, int iSize, int iStackIndex, int iFuncIndex);
 
 
 // 符号表
-LinkedList g_symbolTable;
+LinkedList g_SymbolTable;
 
 #endif //QASM_SYMBOLTABLE_H

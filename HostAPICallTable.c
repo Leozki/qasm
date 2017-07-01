@@ -4,4 +4,4 @@
 
 #include "HostAPICallTable.h"
 
-LinkedList *g_HostAPICallTable;
+LinkedList g_HostAPICallTable;

@@ -213,7 +213,7 @@ Token GetNextToken() {
     if (GetInstrByMnemonic(g_Lexer.pstrCurrLexeme, &instr))
         g_Lexer.CurrToken = TOKEN_TYPE_INSTR;
 
-    // printf("GetNextToken = %s\n", g_Lexer.pstrCurrLexeme);
+    printf("GetNextToken = %s\n", g_Lexer.pstrCurrLexeme);
     return g_Lexer.CurrToken;
 }
 

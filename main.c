@@ -7,18 +7,20 @@
 #include "FuncTable.h"
 #include "StringTable.h"
 #include "SourceLoader.h"
-#include "Assembler.h"
+#include "Parser.h"
+#include "XSEWriter.h"
+#include "HostAPICallTable.h"
 
 void Init() {
     // 初始化指令表
     InitInstrTable();
     // 初始化其他表
-    InitLinkedList(&g_symbolTable);
+    InitLinkedList(&g_SymbolTable);
     InitLinkedList(&g_LabelTable);
-    InitLinkedList(&g_funcTable);
-    InitLinkedList(&g_stringTable);
+    InitLinkedList(&g_FuncTable);
+    InitLinkedList(&g_StringTable);
+    InitLinkedList(&g_HostAPICallTable);
 }
-
 
 int main(int argc, char *argv[]) {
     if (argc < 2) return 0;
@@ -52,14 +54,13 @@ int main(int argc, char *argv[]) {
 
     // 初始化 assembler
     Init();
-
     // 加载源文件
     LoadSourceFile();
-
     printf("Begin process:%s...\n\n", g_pstrSourceFilename);
-
     // 编译处理源文件
     AssmblSourceFile();
+    // 编译后写入 .xse
+    BuildXSE();
 
     return 0;
 }
